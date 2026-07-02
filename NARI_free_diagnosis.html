@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NARI. 無料診断 — 地域集客の伸びしろチェック</title>
+<style>
+  :root{
+    --cream:#FBF8F4;
+    --cream-deep:#F3EEE5;
+    --ink:#1E1E2C;
+    --ink-muted:#6B6B78;
+    --blue:#4F7FE3;
+    --blue-deep:#3862C4;
+    --pink:#EF5A93;
+    --coral:#FF8A56;
+    --gold:#C9A876;
+    --gold-deep:#A97C3C;
+    --line:#E3DCCF;
+    --white:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',-apple-system,BlinkMacSystemFont,sans-serif;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px 16px;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .serif{ font-family:Cambria,'Hiragino Mincho ProN','Yu Mincho',serif; }
+
+  /* ambient blobs (signature motif) */
+  .blob{
+    position:fixed;
+    border-radius:50%;
+    filter:blur(2px);
+    pointer-events:none;
+    z-index:0;
+  }
+  .blob-a{
+    width:520px;height:520px;
+    background:radial-gradient(circle at 30% 30%, var(--pink), transparent 70%);
+    opacity:.16;
+    bottom:-220px; left:-180px;
+  }
+  .blob-b{
+    width:380px;height:380px;
+    background:radial-gradient(circle at 40% 40%, var(--coral), transparent 70%);
+    opacity:.14;
+    top:-160px; right:-140px;
+  }
+
+  .stage{
+    position:relative;
+    z-index:1;
+    width:100%;
+    max-width:560px;
+  }
+
+  .brand{
+    display:flex; align-items:center; justify-content:center;
+    gap:8px; margin-bottom:28px;
+  }
+  .brand .mark{
+    width:34px;height:34px;border-radius:50%;
+    border:1px solid var(--gold-deep);
+    display:flex;align-items:center;justify-content:center;
+    font-family:Cambria,serif; color:var(--gold-deep); font-size:15px;
+  }
+  .brand .name{
+    font-family:Cambria,serif; font-weight:700; letter-spacing:2px;
+    color:var(--ink); font-size:15px;
+  }
+
+  .card{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:44px 36px;
+    box-shadow:0 24px 60px -30px rgba(30,30,44,.18);
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* progress */
+  .progress-track{
+    height:3px; width:100%;
+    background:var(--cream-deep);
+    border-radius:3px;
+    overflow:hidden;
+    margin-bottom:26px;
+  }
+  .progress-fill{
+    height:100%;
+    background:linear-gradient(90deg, var(--blue), var(--pink));
+    width:0%;
+    transition:width .45s ease;
+  }
+
+  .screen{ display:none; animation:fade .4s ease; }
+  .screen.active{ display:block; }
+  @keyframes fade{
+    from{ opacity:0; transform:translateY(6px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  /* intro */
+  .eyebrow{
+    font-size:11px; font-weight:700; letter-spacing:3px;
+    color:var(--blue); text-transform:uppercase; margin:0 0 14px;
+  }
+  h1.headline{
+    font-size:28px; line-height:1.4; margin:0 0 14px; color:var(--ink);
+    font-weight:700;
+  }
+  p.lead{
+    font-size:14px; line-height:1.8; color:var(--ink-muted); margin:0 0 30px;
+  }
+  .meta-row{
+    display:flex; gap:18px; margin-bottom:32px;
+    font-size:12px; color:var(--ink-muted);
+  }
+  .meta-row span{ display:flex; align-items:center; gap:6px; }
+  .dot{ width:5px;height:5px;border-radius:50%; background:var(--gold-deep); display:inline-block; }
+
+  button.btn{
+    appearance:none; border:none; cursor:pointer;
+    font-family:inherit; font-size:15px; font-weight:700;
+    padding:16px 28px; border-radius:999px;
+    width:100%;
+    transition:transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+  }
+  button.btn:active{ transform:scale(.98); }
+  button.btn:focus-visible{ outline:2px solid var(--blue); outline-offset:3px; }
+  .btn-primary{
+    background:var(--ink); color:var(--white);
+  }
+  .btn-primary:hover{ opacity:.88; }
+  .btn-cta{
+    background:var(--pink); color:var(--white);
+    box-shadow:0 14px 28px -12px rgba(239,90,147,.55);
+  }
+  .btn-cta:hover{ opacity:.92; }
+  .btn-ghost{
+    background:transparent; color:var(--ink-muted);
+    font-weight:600; font-size:13px; padding:10px; margin-top:14px;
+    text-decoration:underline; text-underline-offset:3px;
+  }
+
+  /* question screen */
+  .q-eyebrow{
+    display:flex; justify-content:space-between; align-items:baseline;
+    margin-bottom:18px;
+  }
+  .q-count{ font-size:11px; letter-spacing:2px; color:var(--gold-deep); font-weight:700; }
+  .q-tag{ font-size:11px; letter-spacing:2px; color:var(--ink-muted); }
+  h2.question{
+    font-size:21px; line-height:1.55; font-weight:700; color:var(--ink);
+    margin:0 0 34px;
+    min-height:96px;
+  }
+
+  .scale{
+    display:flex; justify-content:space-between; gap:8px; margin-bottom:10px;
+  }
+  .scale button{
+    appearance:none; cursor:pointer;
+    flex:1; aspect-ratio:1/1;
+    border-radius:12px;
+    border:1.5px solid var(--line);
+    background:var(--cream);
+    font-family:Cambria,serif; font-size:17px; font-weight:700;
+    color:var(--ink-muted);
+    display:flex; align-items:center; justify-content:center;
+    transition:all .15s ease;
+  }
+  .scale button:hover{ border-color:var(--blue); color:var(--blue); }
+  .scale button:focus-visible{ outline:2px solid var(--blue); outline-offset:2px; }
+  .scale button.selected{
+    background:var(--ink); border-color:var(--ink); color:var(--white);
+    transform:translateY(-2px);
+  }
+  .scale-labels{
+    display:flex; justify-content:space-between;
+    font-size:11px; color:var(--ink-muted); margin-bottom:8px;
+  }
+
+  .q-nav{ display:flex; justify-content:space-between; align-items:center; margin-top:28px; }
+  .nav-back{
+    background:none; border:none; cursor:pointer;
+    font-size:12px; color:var(--ink-muted); font-weight:600;
+    padding:8px 4px;
+  }
+  .nav-back:disabled{ opacity:0; pointer-events:none; }
+
+  /* result */
+  .result-badge{
+    font-family:Cambria,serif; font-size:12px; letter-spacing:3px;
+    color:var(--gold-deep); font-weight:700; margin-bottom:12px;
+  }
+  h2.result-headline{
+    font-size:26px; line-height:1.4; margin:0 0 16px; font-weight:700;
+  }
+  p.result-msg{
+    font-size:14px; line-height:1.85; color:var(--ink-muted); margin:0 0 26px;
+  }
+  .gauge-wrap{ margin-bottom:30px; }
+  .gauge-track{
+    height:8px; width:100%; background:var(--cream-deep);
+    border-radius:8px; overflow:hidden;
+  }
+  .gauge-fill{
+    height:100%; border-radius:8px;
+    background:linear-gradient(90deg, var(--gold), var(--gold-deep));
+    width:0%; transition:width 1s cubic-bezier(.22,1,.36,1);
+  }
+  .gauge-caption{
+    display:flex; justify-content:space-between;
+    font-size:11px; color:var(--ink-muted); margin-top:8px;
+  }
+  .gauge-caption .score{ color:var(--ink); font-weight:700; font-family:Cambria,serif; font-size:13px; }
+
+  .disclaimer{
+    font-size:11px; color:var(--ink-muted); text-align:center; margin-top:14px; line-height:1.7;
+  }
+
+  footer{
+    text-align:center; margin-top:22px; font-size:10px;
+    letter-spacing:2px; color:var(--ink-muted); text-transform:uppercase;
+  }
+
+  @media (max-width:480px){
+    .card{ padding:32px 22px; border-radius:14px; }
+    h1.headline{ font-size:23px; }
+    h2.question{ font-size:18px; min-height:110px; }
+    .scale button{ border-radius:10px; font-size:15px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .screen, .progress-fill, .gauge-fill, button.btn{ transition:none; animation:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="blob blob-a"></div>
+<div class="blob blob-b"></div>
+
+<div class="stage">
+  <div class="brand">
+    <div class="mark">N.</div>
+    <div class="name">NARI.</div>
+  </div>
+
+  <div class="card">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+    <!-- INTRO -->
+    <section class="screen active" id="screen-intro">
+      <p class="eyebrow">Free Diagnosis</p>
+      <h1 class="headline serif">30秒で、地域集客の<br>伸びしろを診断。</h1>
+      <p class="lead">7つの質問に答えるだけ。デザイン・集客・AI活用について、今の状態を簡単にチェックできます。</p>
+      <div class="meta-row">
+        <span><span class="dot"></span>所要時間 約1分</span>
+        <span><span class="dot"></span>質問数 7問</span>
+        <span><span class="dot"></span>完全無料</span>
+      </div>
+      <button class="btn btn-primary" onclick="startQuiz()">診断をはじめる</button>
+    </section>
+
+    <!-- QUESTIONS injected here -->
+    <div id="questions"></div>
+
+    <!-- RESULT -->
+    <section class="screen" id="screen-result">
+      <p class="result-badge">DIAGNOSIS RESULT</p>
+      <h2 class="result-headline serif" id="resultHeadline"></h2>
+      <p class="result-msg" id="resultMsg"></p>
+
+      <div class="gauge-wrap">
+        <div class="gauge-track"><div class="gauge-fill" id="gaugeFill"></div></div>
+        <div class="gauge-caption">
+          <span>診断スコア</span>
+          <span class="score" id="scoreLabel">0 / 35</span>
+        </div>
+      </div>
+
+      <a class="btn btn-cta" style="display:block;text-align:center;text-decoration:none;" href="mailto:info@example.com?subject=無料相談のお申し込み" id="ctaBtn">無料相談を予約する</a>
+      <p class="disclaimer">＊ご相談・診断結果のご説明はすべて無料です。しつこい営業は一切いたしません。</p>
+      <button class="btn-ghost" onclick="resetQuiz()" style="display:block;width:100%;text-align:center;background:none;border:none;">もう一度診断する</button>
+    </section>
+  </div>
+
+  <footer>Narita Local Business Support — NARI.</footer>
+</div>
+
+<script>
+  const questions = [
+    { tag:"MEO", text:"Googleマップでの自社の口コミ・評価に、満足している" },
+    { tag:"SEO", text:"「成田市 + 業種名」で検索したとき、自社が上位に出てくる自信がある" },
+    { tag:"WEB", text:"ホームページやSNSの情報を、いつも最新の状態に保てている" },
+    { tag:"集客", text:"集客にかけている時間や費用に見合った成果が、出ている" },
+    { tag:"AI", text:"ChatGPTなどのAIツールを、日々の業務で使いこなせている" },
+    { tag:"デザイン", text:"ロゴ・名刺・LPなど、見た目の印象に一貫性がある" },
+    { tag:"相談先", text:"デザインや集客について、気軽に相談できる相手がいる" },
+  ];
+
+  const answers = new Array(questions.length).fill(0);
+  let current = -1; // -1 = intro
+
+  const questionsWrap = document.getElementById("questions");
+  questions.forEach((q, i) => {
+    const section = document.createElement("section");
+    section.className = "screen";
+    section.id = "screen-q" + i;
+    section.innerHTML = `
+      <div class="q-eyebrow">
+        <span class="q-count">Q${i+1} / ${questions.length}</span>
+        <span class="q-tag">${q.tag}</span>
+      </div>
+      <h2 class="question serif">${q.text}</h2>
+      <div class="scale" data-q="${i}">
+        ${[1,2,3,4,5].map(n => `<button type="button" data-val="${n}" onclick="selectAnswer(${i}, ${n})">${n}</button>`).join("")}
+      </div>
+      <div class="scale-labels">
+        <span>当てはまらない</span>
+        <span>とても当てはまる</span>
+      </div>
+      <div class="q-nav">
+        <button class="nav-back" onclick="goTo(${i-1})" ${i===0 ? "disabled" : ""}>← 前の質問</button>
+      </div>
+    `;
+    questionsWrap.appendChild(section);
+  });
+
+  function allScreens(){
+    return [document.getElementById("screen-intro"),
+      ...questions.map((_,i)=>document.getElementById("screen-q"+i)),
+      document.getElementById("screen-result")];
+  }
+
+  function showScreen(index){
+    // index: -1 intro, 0..n-1 questions, n = result
+    allScreens().forEach(s => s.classList.remove("active"));
+    if(index === -1){
+      document.getElementById("screen-intro").classList.add("active");
+    } else if(index === questions.length){
+      document.getElementById("screen-result").classList.add("active");
+    } else {
+      document.getElementById("screen-q"+index).classList.add("active");
+    }
+    current = index;
+    document.getElementById("progressFill").style.width =
+      (index === -1 ? 0 : index === questions.length ? 100 : (index/questions.length)*100) + "%";
+    window.scrollTo({top:0, behavior:"instant"});
+  }
+
+  function startQuiz(){ showScreen(0); }
+
+  function goTo(index){
+    if(index < 0){ showScreen(-1); return; }
+    showScreen(index);
+  }
+
+  function selectAnswer(qIndex, val){
+    answers[qIndex] = val;
+    const scale = document.querySelector(`.scale[data-q="${qIndex}"]`);
+    [...scale.children].forEach(btn=>{
+      btn.classList.toggle("selected", Number(btn.dataset.val) === val);
+    });
+    setTimeout(()=>{
+      if(qIndex < questions.length - 1){
+        showScreen(qIndex + 1);
+      } else {
+        showResult();
+      }
+    }, 320);
+  }
+
+  function showResult(){
+    const score = answers.reduce((a,b)=>a+b,0);
+    const max = questions.length * 5;
+    document.getElementById("scoreLabel").textContent = `${score} / ${max}`;
+
+    let headline, msg;
+    if(score <= 16){
+      headline = "伸びしろ、かなりあります。";
+      msg = "まだ手つかずの部分が多く残っています。裏を返せば、少し整えるだけで大きく変わる余地があるということ。まずは無料相談で、優先順位から一緒に整理しましょう。";
+    } else if(score <= 26){
+      headline = "土台はできています。あとひと押し。";
+      msg = "基本的な部分はすでに整っています。あと少し、部分的に手を入れるだけで、集客の成果がもっと安定するはずです。";
+    } else {
+      headline = "かなり良い状態です。";
+      msg = "土台がしっかりしています。ここからは細部の磨き込みで、さらに一段上を目指せる段階です。伸びしろの棚卸しだけでも、無料相談でお気軽にどうぞ。";
+    }
+    document.getElementById("resultHeadline").textContent = headline;
+    document.getElementById("resultMsg").textContent = msg;
+
+    showScreen(questions.length);
+    requestAnimationFrame(()=>{
+      setTimeout(()=>{
+        document.getElementById("gaugeFill").style.width = ((score/max)*100) + "%";
+      }, 50);
+    });
+  }
+
+  function resetQuiz(){
+    answers.fill(0);
+    document.querySelectorAll(".scale button.selected").forEach(b=>b.classList.remove("selected"));
+    showScreen(-1);
+  }
+</script>
+
+</body>
+</html>
