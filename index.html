@@ -4,11 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NARI. — あなたの、一番近い相談相手。｜成田エリア ローカルビジネス支援</title>
+<link rel="icon" type="image/png" href="logo/mark_favicon.png">
 <style>
   :root{
     --cream:#FBF8F4;
     --cream-deep:#F3EEE5;
     --ink:#1E1E2C;
+    --navy:#1B2A52;
     --ink-muted:#6B6B78;
     --blue:#4F7FE3;
     --blue-deep:#3862C4;
@@ -47,7 +49,8 @@
     display:flex; align-items:center; justify-content:space-between;
   }
   .brand{ display:flex; align-items:center; gap:9px; }
-  .brand .name{ font-family:Cambria,serif; font-weight:700; letter-spacing:2px; font-size:15px; }
+  .brand-mark{ width:34px; height:34px; object-fit:contain; display:block; }
+  .brand .name{ font-family:Cambria,serif; font-weight:700; letter-spacing:2px; font-size:16px; color:var(--navy); }
   .nav-cta{
     background:var(--ink); color:var(--white);
     font-size:12.5px; font-weight:700; text-decoration:none;
@@ -177,9 +180,17 @@
   .step{ padding:0 28px; border-left:1px solid var(--line); }
   .step:first-child{ border-left:none; padding-left:0; }
   .step:last-child{ padding-right:0; }
-  a.step-link{ text-decoration:none; color:inherit; display:block; border-radius:12px; transition:background .18s ease, transform .18s ease; }
-  a.step-link:hover{ background:rgba(239,90,147,.05); transform:translateY(-2px); }
-  .step-cta{ font-size:11.5px; font-weight:700; color:var(--pink); margin-top:10px; letter-spacing:1px; }
+  .step-cta{
+    display:inline-flex; align-items:center; gap:6px;
+    margin-top:16px; padding:9px 18px;
+    background:var(--ink); color:var(--white);
+    font-size:12px; font-weight:700; letter-spacing:.5px;
+    border-radius:999px; text-decoration:none;
+    transition:transform .16s ease, box-shadow .16s ease, background .16s ease;
+  }
+  .step-cta:hover{ background:var(--pink); transform:translateY(-1px); box-shadow:0 10px 20px -10px rgba(239,90,147,.6); }
+  .step-cta .arw{ transition:transform .16s ease; }
+  .step-cta:hover .arw{ transform:translateX(3px); }
   a.phone-link{ display:block; }
   a.contact-value{ text-decoration:none; color:inherit; transition:color .15s ease; }
   a.contact-value:hover{ color:var(--pink); }
@@ -191,16 +202,53 @@
   .step .price b{ font-size:19px; }
 
   /* ---------- pricing ---------- */
+  .plan-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-bottom:22px; }
+  .plan{
+    position:relative; border:1px solid var(--line); border-radius:16px;
+    padding:28px 24px 26px; background:var(--cream); display:flex; flex-direction:column;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .plan:hover{ transform:translateY(-3px); box-shadow:0 20px 40px -24px rgba(30,30,44,.28); }
+  .plan.featured{
+    border:1.5px solid var(--gold); background:var(--white);
+    box-shadow:0 24px 48px -28px rgba(201,168,118,.6);
+  }
+  .plan-badge{
+    position:absolute; top:-11px; left:50%; transform:translateX(-50%);
+    background:var(--gold-deep); color:#fff; font-size:10px; font-weight:700;
+    letter-spacing:1.5px; padding:5px 14px; border-radius:999px; white-space:nowrap;
+  }
+  .plan-name{ font-size:16px; font-weight:700; color:var(--ink); margin:0 0 4px; }
+  .plan-desc{ font-size:11.5px; color:var(--ink-muted); margin:0 0 16px; line-height:1.6; min-height:34px; }
+  .plan-price{ font-family:Cambria,serif; color:var(--gold-deep); font-weight:700; margin-bottom:18px; line-height:1; }
+  .plan-price .num{ font-size:34px; }
+  .plan-price .unit{ font-size:14px; }
+  .plan-price .from{ font-size:12px; color:var(--ink-muted); font-family:inherit; margin-left:2px; }
+  .plan-feats{ list-style:none; padding:0; margin:0 0 4px; }
+  .plan-feats li{ font-size:12.5px; color:var(--ink); line-height:1.5; padding:7px 0 7px 22px; position:relative; border-top:1px solid var(--line); }
+  .plan-feats li::before{
+    content:""; position:absolute; left:2px; top:12px; width:11px; height:6px;
+    border-left:2px solid var(--gold-deep); border-bottom:2px solid var(--gold-deep); transform:rotate(-45deg);
+  }
+  .plan-note-line{ font-size:11.5px; color:var(--ink-muted); text-align:center; margin:0 0 30px; }
+
+  .price-detail-head{ font-size:12px; font-weight:700; letter-spacing:1.5px; color:var(--gold-deep); margin:0 0 4px; }
+  .price-detail-sub{ font-size:12px; color:var(--ink-muted); margin:0 0 14px; }
   .price-row{
     display:flex; justify-content:space-between; align-items:baseline;
-    padding:18px 0; border-bottom:1px solid var(--line); gap:20px; flex-wrap:wrap;
+    padding:15px 0; border-bottom:1px solid var(--line); gap:20px; flex-wrap:wrap;
   }
   .price-row:first-of-type{ border-top:1px solid var(--line); }
-  .price-left b{ font-size:15px; }
+  .price-left b{ font-size:14.5px; }
   .price-left span{ font-size:11.5px; color:var(--ink-muted); margin-left:8px; }
   .price-right{ font-weight:700; color:var(--gold-deep); font-size:14px; white-space:nowrap; }
-  .price-right b{ font-size:19px; }
-  .price-note{ font-size:11px; color:var(--ink-muted); font-style:italic; margin-bottom:10px; }
+  .price-right b{ font-size:18px; }
+  .price-note{ font-size:11px; color:var(--ink-muted); font-style:italic; margin:14px 0 0; }
+
+  @media (max-width:760px){
+    .plan-grid{ grid-template-columns:1fr; gap:14px; }
+    .plan.featured{ order:-1; }
+  }
 
   /* ---------- why us ---------- */
   .why-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:0; text-align:center; }
@@ -254,20 +302,21 @@
 
   /* ---------- final contact ---------- */
   .contact-sec{ text-align:center; }
-  .contact-sec h2{ font-size:32px; margin:0 0 14px; }
-  .contact-sec .mini-rule{ width:44px; height:2px; background:var(--gold); margin:0 auto 18px; }
-  .contact-sec p.lead{ font-size:14px; color:var(--ink-muted); margin:0 0 40px; }
-  .contact-grid{ display:flex; justify-content:center; align-items:flex-start; gap:56px; flex-wrap:wrap; margin-bottom:44px; }
-  .contact-item .label{ font-size:10.5px; font-weight:700; letter-spacing:2.5px; color:var(--gold-deep); margin-bottom:8px; }
-  .contact-item .value{ font-size:15px; font-weight:600; }
+  .contact-sec h2{ font-size:27px; margin:0 0 12px; }
+  .contact-sec .mini-rule{ width:40px; height:2px; background:var(--gold); margin:0 auto 14px; }
+  .contact-sec p.lead{ font-size:13.5px; color:var(--ink-muted); margin:0 0 30px; }
+  .contact-grid{ display:flex; justify-content:center; align-items:center; gap:48px; flex-wrap:wrap; margin-bottom:34px; }
+  .contact-item{ display:flex; flex-direction:column; align-items:center; }
+  .contact-item .label{ font-size:10px; font-weight:700; letter-spacing:2.5px; color:var(--gold-deep); margin-bottom:6px; }
+  .contact-item .value{ font-size:14px; font-weight:600; }
   .line-card{ display:flex; flex-direction:column; align-items:center; }
   .line-qr{
-    width:132px; height:132px; border-radius:14px; overflow:hidden;
-    border:1px solid var(--line); background:var(--white); padding:8px;
-    box-shadow:0 14px 30px -16px rgba(30,30,44,.28); margin-top:4px;
+    width:104px; height:104px; border-radius:12px; overflow:hidden;
+    border:1px solid var(--line); background:var(--white); padding:6px;
+    box-shadow:0 10px 24px -14px rgba(30,30,44,.25); margin-top:2px;
   }
   .line-qr img{ width:100%; height:100%; display:block; object-fit:contain; }
-  .line-hint{ font-size:11px; color:var(--ink-muted); margin-top:8px; }
+  .line-hint{ font-size:10.5px; color:var(--ink-muted); margin-top:6px; }
 
   /* ---------- neighborhood photos ---------- */
   .photo-feature{ position:relative; margin-bottom:34px; }
@@ -345,7 +394,7 @@
 
 <header class="nav">
   <div class="nav-inner">
-    <div class="brand"><div class="name">NARI.</div></div>
+    <div class="brand"><img class="brand-mark" src="logo/mark.png" alt="NARI. ロゴ"><div class="name">NARI.</div></div>
     <a class="nav-cta" href="NARI_free_diagnosis.html">無料診断</a>
   </div>
 </header>
@@ -448,6 +497,7 @@
       <div class="pos-copy">
         <p>デザイン会社、ホームページ制作会社、AIコンサル、システム開発会社。それぞれ別々に探して、何社ともやり取りをするのは大変です。</p>
         <p>NARI.なら、企画からデザイン、集客、AI活用、システム開発まで、まとめてご相談いただけます。信頼できるブランディング会社・開発会社とも連携しているため、小さなことから大きなプロジェクトまで安心してお任せください。</p>
+        <p style="color:var(--ink); font-weight:600;">目指すのは「作って終わり」ではなく、<span style="color:var(--pink);">お店や会社が見つけてもらえる・選ばれる</span>こと。その一点にこだわります。</p>
       </div>
       <div class="pillars">
         <div class="pillar">
@@ -487,16 +537,14 @@
       <h2 class="serif">ご相談の流れ。</h2>
     </div>
     <div class="steps">
-      <a class="step-link" href="NARI_free_diagnosis.html">
-        <div class="step">
-          <div class="p-num serif">01</div>
-          <h3>無料診断</h3>
-          <div class="mini-rule"></div>
-          <ul><li>MEO・SEO簡易診断</li><li>ホームページ診断</li><li>AI活用診断</li><li>改善ポイントのご提案</li></ul>
-          <div class="price">無料 〜</div>
-          <div class="step-cta">今すぐ受ける →</div>
-        </div>
-      </a>
+      <div class="step">
+        <div class="p-num serif">01</div>
+        <h3>無料診断</h3>
+        <div class="mini-rule"></div>
+        <ul><li>MEO・SEO簡易診断</li><li>ホームページ診断</li><li>AI活用診断</li><li>改善ポイントのご提案</li></ul>
+        <div class="price">無料 〜</div>
+        <a class="step-cta" href="NARI_free_diagnosis.html">今すぐ受ける <span class="arw">→</span></a>
+      </div>
       <div class="step">
         <div class="p-num serif">02</div>
         <h3>導入支援・コンサルティング</h3>
@@ -518,40 +566,83 @@
 <!-- PRICING -->
 <section class="s-pad tight" id="pricing" style="background:var(--white);">
   <div class="wrap">
-    <div class="s-head" style="margin-bottom:8px;">
+    <div class="s-head" style="margin-bottom:26px;">
       <p class="eyebrow">Pricing</p>
-      <h2 class="serif">料金プラン</h2>
+      <h2 class="serif">まずは、目的に合わせて。</h2>
     </div>
-    <p class="price-note">※ 料金は事業者さんの状況に合わせて、ご相談しながら決めていきます</p>
+
+    <div class="plan-grid">
+      <div class="plan">
+        <div class="plan-name">はじめてプラン</div>
+        <div class="plan-desc">まずは名刺代わりに。お店・会社の「顔」となる1ページ。</div>
+        <div class="plan-price"><span class="num">15</span><span class="unit">万円</span><span class="from">〜</span></div>
+        <ul class="plan-feats">
+          <li>1ページ完結のサイト</li>
+          <li>スマホ対応デザイン</li>
+          <li>お問い合わせ・地図</li>
+          <li>ロゴの簡易制作込み</li>
+        </ul>
+      </div>
+
+      <div class="plan featured">
+        <div class="plan-badge">人気No.1</div>
+        <div class="plan-name">しっかりプラン</div>
+        <div class="plan-desc">集客まで見据えた、本格的なホームページ。</div>
+        <div class="plan-price"><span class="num">45</span><span class="unit">万円</span><span class="from">〜</span></div>
+        <ul class="plan-feats">
+          <li>5〜7ページの本格サイト</li>
+          <li>オリジナルデザイン</li>
+          <li>MEO・SEO初期設定</li>
+          <li>ロゴ・写真撮影ご相談可</li>
+        </ul>
+      </div>
+
+      <div class="plan">
+        <div class="plan-name">まるごとプラン</div>
+        <div class="plan-desc">制作から集客・運用まで、ぜんぶお任せ。</div>
+        <div class="plan-price"><span class="num">90</span><span class="unit">万円</span><span class="from">〜</span></div>
+        <ul class="plan-feats">
+          <li>ブランディング一式</li>
+          <li>本格サイト＋LP</li>
+          <li>集客・運用の伴走支援</li>
+          <li>AI活用のご提案</li>
+        </ul>
+      </div>
+    </div>
+    <p class="plan-note-line">※ 目安の金額です。ページ数やご希望に合わせて、ご相談しながら調整します。</p>
+
+    <p class="price-detail-head">SINGLE MENU</p>
+    <p class="price-detail-sub">「これだけ」という単品のご相談も、もちろん歓迎です。</p>
 
     <div class="price-row">
       <div class="price-left"><b>ロゴ制作</b><span>ブランドの世界観づくり</span></div>
       <div class="price-right"><b>8</b>万円〜</div>
     </div>
     <div class="price-row">
-      <div class="price-left"><b>ホームページ制作</b><span>コーポレートサイト一式</span></div>
-      <div class="price-right"><b>40</b>〜<b>100</b>万円</div>
+      <div class="price-left"><b>LP制作</b><span>1ページで魅せる集客ページ</span></div>
+      <div class="price-right"><b>15</b>万円〜</div>
     </div>
     <div class="price-row">
-      <div class="price-left"><b>LP制作</b><span>原稿・写真込みのオリジナルLP</span></div>
-      <div class="price-right"><b>15</b>〜<b>30</b>万円</div>
+      <div class="price-left"><b>ホームページ制作</b><span>本格的なコーポレートサイト</span></div>
+      <div class="price-right"><b>45</b>万円〜</div>
     </div>
     <div class="price-row">
       <div class="price-left"><b>MEO運用</b><span>Googleマップ運用・口コミ対応</span></div>
-      <div class="price-right">月額 <b>3</b>〜<b>6</b>万円</div>
+      <div class="price-right">月額 <b>3</b>万円〜</div>
     </div>
     <div class="price-row">
       <div class="price-left"><b>SEOコンサルティング</b><span>検索上位対策・コンテンツ設計</span></div>
-      <div class="price-right">月額 <b>8</b>〜<b>15</b>万円</div>
+      <div class="price-right">月額 <b>8</b>万円〜</div>
     </div>
     <div class="price-row">
       <div class="price-left"><b>AI活用コンサルティング</b><span>スポット／月次伴走支援</span></div>
-      <div class="price-right">スポット<b>5</b>万円〜 ／ 月額<b>10</b>〜<b>15</b>万円</div>
+      <div class="price-right">スポット <b>5</b>万円〜</div>
     </div>
     <div class="price-row">
       <div class="price-left"><b>システム開発</b><span>提携先と連携し個別対応</span></div>
       <div class="price-right">個別見積り</div>
     </div>
+    <p class="price-note">※ 別途、サーバー・ドメイン費（年1万円前後）や、月額の保守費をご案内する場合があります。</p>
   </div>
 </section>
 
@@ -636,7 +727,7 @@
 </section>
 
 <!-- CONTACT -->
-<section class="s-pad contact-sec" id="contact">
+<section class="s-pad tight contact-sec" id="contact">
   <div class="wrap">
     <h2 class="serif">お気軽にご相談ください。</h2>
     <div class="mini-rule"></div>
